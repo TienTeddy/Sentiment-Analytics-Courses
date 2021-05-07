@@ -1,0 +1,42 @@
+﻿@model List<Sentiment_Analytics_CoursesML.Model.ModelInput>
+  
+@{  
+    ViewData["Title"] = "Phân Tích Cảm Xúc";  
+}  
+<h2>Semantic Analysis</h2>  
+<hr />  
+@{  
+    var result = ViewBag.Result;  
+}  
+<div class="row">  
+    <div class="col-lg-4 col-md-12">  
+        <form asp-action="Analysis">  
+            <div class="form-group">  
+                <label name="SentimentTexti" class="control-label"></label>  
+                <input id="SentimentTexti" name="SentimentText" class="form-control" required/>  
+            </div>  
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-lg">Kiểm Tra</button>
+            </div>  
+        </form>  
+    </div>  
+    <div class="col-md-12 col-lg-8">  
+        @if (result != null)  
+        {  
+            <h2>Kết quả</h2>
+            <hr /><br />
+
+            <h4>Nội dung: @ViewBag.Context</h4>
+            <h4>Dự đoán: @ViewBag.Result</h4>  
+            foreach(var s in Model){
+                <div class="@s.Theme">
+                    <strong>@s.Sentiment: </strong><small>@s.Point @s.Percent%</small><br>
+                </div>
+            }
+            
+        }  
+    </div>  
+</div>
+@section Scripts {  
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}  
+}

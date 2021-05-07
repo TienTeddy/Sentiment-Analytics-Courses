@@ -1,0 +1,112 @@
+﻿@model Sentiment_Analytics_Courses.Models.Sentiment
+@{
+    ViewData["Title"] = "Dữ Liệu";
+}
+@{IEnumerable<Sentiment> sentiments = (IEnumerable<Sentiment>)ViewBag.list;}
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/site.css" />
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<div class="container">
+    <strong for="dataText">Dữ Liệu</strong><br />
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-6">
+            <form asp-controller="Home" asp-action="Insert_Data" method="post">
+                @Html.AntiForgeryToken()
+
+                @Html.ValidationSummary(true)
+
+                <div class="form-group">
+                    <label for="Insert">Thái độ</label>
+                    <select name="sentiment" id="Insert" class="form-control">
+                        <option value="Tích Cực">Tích Cực</option>
+                        <option value="Trung Tính">Trung Tính</option>
+                        <option value="Tiêu Cực">Tiêu Cực</option>
+                        <option value="Rất Tiêu Cực">Rất Tiêu Cực</option>
+                        <option value="Hạnh Phúc">Hạnh Phúc</option>
+                        <option value="Phẫn Nộ">Phẫn Nộ</option>
+                    </select>
+                    <small class="alert-danger">@Html.ValidationMessageFor(Model => Model.sentiment)</small>
+                    <br />
+                    <label for="text">Nội dung</label>
+                    <input id="text" name="sentimentText" class="form-control" placeholder="nội dung.." />
+                    <small class="alert-danger">@Html.ValidationMessageFor(Model => Model.sentimentText)</small>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Thêm" class="btn btn-outline-success" />
+                </div>
+            </form>
+        </div>
+        <div class=" col-12 col-md-6 col-lg-6" id="sentiment">
+            <div class="form-group">
+                <input type="text" class="search form-control" placeholder="Search.." />
+            </div>
+            <form class="col-12" asp-action="Deleted" method="post">
+                <table class="table-info table-hover">
+                    <thead class="bg-info">
+                        <tr>
+                            <th>Thái Độ</th>
+                            <th>Nội Dung</th>
+                            <th>
+                                <input type="checkbox" class="form-check">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="list">
+                        @foreach (var s in sentiments)
+                        {
+                            <tr>
+                                <td class="sentiment" name="sentiment">@s.sentiment</td>
+                                <td class="sentimentText" name="sentimentText">@s.sentimentText</td>
+                                <td class="checkbox"><input type="checkbox" value="@s.sentimentText" name="checkbox" class="form-check" id="checkbox" /></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-outline-danger">Delete</button>
+                </div>
+            </form><hr />
+            <div class="pagination"></div>
+        </div>
+    </div>
+</div>
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+<!--Alert_Modal-->
+@section Scripts{
+    <script>
+        $("th input[type='checkbox']").on("change", function () {
+            var cb = $(this),          //checkbox that was changed
+                th = cb.parent(),      //get parent th
+                col = th.index() + 1;  //get column index. note nth-child starts at 1, not zero
+            $("tbody td:nth-child(" + col + ") input").prop("checked", this.checked);  //select the inputs and [un]check it
+        });
+        //----------------
+        var monkeyList = new List('sentiment', {
+            valueNames: ['sentiment','sentimentText'],
+            page: 10,
+            pagination: true
+        });
+
+        var notify = "@ViewBag.alert";
+        if (notify == "alert-success") {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: "@ViewBag.message",
+                showConfirmButton: false,
+                timer: 1500
+            })
+        }
+        else if (notify== "alert-danger") {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                title: "@ViewBag.message",
+                showConfirmButton: false,
+                timer: 1500
+            })
+        }
+    </script>
+}

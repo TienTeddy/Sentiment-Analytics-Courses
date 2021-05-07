@@ -1,0 +1,2 @@
+T:\AI\Sentiment-Analytics-Courses\Model\obj\Debug\Model.csprojAssemblyReference.cache
+T:\AI\Sentiment-Analytics-Courses\Model\obj\Debug\Model.csproj.CoreCompileInputs.cache
